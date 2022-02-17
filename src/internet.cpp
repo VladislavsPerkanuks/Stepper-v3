@@ -3,9 +3,11 @@
 // const char *ssid = "KEKW 2.4";
 // const char *password = "Pepelsin32!";
 
-const char *ssid = "NanoLab";
-const char *password = "Mikro2015";
+// const char *ssid = "NanoLab";
+// const char *password = "Mikro2015";
 
+const char *ssid = "Vladislavs";
+const char *password = "";
 
 uint8_t counter = 0;
 
@@ -17,11 +19,11 @@ bool initialize_wifi()
 
     while (WiFi.status() != WL_CONNECTED)
     {
-        delay(800);
+        delay(1000);
         Serial.print(".");
         counter++;
 
-        if (counter >= 20)
+        if (counter >= 30)
         {
             return 0;
         }

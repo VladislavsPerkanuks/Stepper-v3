@@ -25,6 +25,7 @@
     <hgroup>
       <h1>Stepper</h1>
       <h2>Current uptime: <span id="uptime">0 Seconds</span></h2>
+      <h3 id="ajaxtest"></h3>
     </hgroup>
   </header>
 
@@ -33,27 +34,29 @@
 
   <form id="myform" name="myform" action="/submit" method="POST">
     <div class="container" id="input_container">
-      <input class="myinput" type="number" id="atrums0" name="atrums0" placeholder="Ātrums">
+      
+      <input class="myinput" type="number" id="speed0" name="speed0" placeholder="Ātrums" value="%SPEED0%">
       <input class="myinput" type="number" id="distance0" name="distance0" placeholder="Attālums" value='%DISTANCE0%'>
       <input type="radio" id="direction0" name="direction0" value="1" checked>
       <label for="direction0">Up</label><br>
       <input type="radio" id="direction0" name="direction0" value="0" %DIRECTION0%>
       <label for="direction0">Down</label><br>
+      
 
-      <input class="myinput" type="number" id="atrums1" name="atrums1" placeholder="Ātrums" value='%SPEED1%'>
+      <input class="myinput" type="number" id="speed1" name="speed1" placeholder="Ātrums" value='%SPEED1%'>
       <input class="myinput" type="number" id="distance1" name="distance1" placeholder="Attālums" value='%DISTANCE1%'>
       <input type="radio" id="direction1" name="direction1" value="1" checked>
       <label for="direction1">Up</label><br>
       <input type="radio" id="direction1" name="direction1" value="0" %DIRECTION1%>
       <label for="direction1">Down</label><br>
 <!-- 
-      <input class="myinput" type="number" id="atrums2" name="atrums2" placeholder="Ātrums" value='%SPEED2%'>
+      <input class="myinput" type="number" id="speed2" name="speed2" placeholder="Ātrums" value='%SPEED2%'>
       <input class="myinput" type="number" id="distance2" name="distance2" placeholder="Attālums" value='%DISTANCE2%'>
     
       <input type="radio" id="direction2" name="direction2" value="1" checked>
-      <label for="atrums2">Up</label><br>
+      <label for="speed2">Up</label><br>
       <input type="radio" id="direction2" name="direction2" value="0" %DIRECTION2%>
-      <label for="atrums2">Down</label><br> -->
+      <label for="speed2">Down</label><br> -->
 
 
 
@@ -70,8 +73,12 @@
   <script>
     function convertFormToJSON(form) {
       var object = {};
+      var object_in_object = {}
       form.forEach((value, key) => object[key] = value);
-      console.log(JSON.stringify(object['distance0']))
+
+
+
+      console.log(JSON.stringify(object));
       return JSON.stringify(object);
     }
 
@@ -89,7 +96,8 @@
           type: 'POST',
           
           success: function (dataofconfirmation) {
-            alert('ok');
+            alert(dataofconfirmation);
+            document.getElementById('ajaxtest').innerHTML = dataofconfirmation;
           },
 
           error: function(er){
@@ -105,14 +113,16 @@
 
   </script>
 
-  <!-- <button onclick="addrows();">Press me</button> -->
-  <!-- <script>
+  
+  <script>
+    let i = 2;
     function addrows() {
-      var speed = ''.concat('%',"SPEED",i,'%');
-      console.log(speed);
+      var speed2 = ''.concat('%',"SPEED",i,'%');
+      console.log(speed2);
       console.log("%SPEED0%");
-      let speed_placeholder = `%${speed}%`
-      let atrums = document.createElement("input");
+      let speed_placeholder = `%${speed2}%`
+
+      let speed = document.createElement("input");
       let distance = document.createElement("input");
       let up = document.createElement("input");
       let up_label = document.createElement("label");
@@ -120,14 +130,14 @@
       let down_label = document.createElement("label");
       let container = document.getElementById("input_container");
 
-      atrums.className = "myinput";
-      atrums.type = "number";
-      atrums.id = "atrums" + i;
-      atrums.name = "atrums" + i;
-      atrums.placeholder = "Ātrums";
-      atrums.value = speed_placeholder;
+      speed.className = "myinput";
+      speed.type = "number";
+      speed.id = "speed" + i;
+      speed.name = "speed" + i;
+      speed.placeholder = "Ātrums";
+      speed.value = speed_placeholder;
       console.log(speed_placeholder);
-      //atrums.value = '%SPEED0%';
+      //speed.value = '%SPEED0%';
 
       distance.className = "myinput";
       distance.type = "number";
@@ -136,7 +146,7 @@
       distance.placeholder = "Attālums";
       distance.value = "%DISTANCE" + i + "%";
 
-      container.append(atrums);
+      container.append(speed);
       container.append(distance);
 
       up.type = "radio";
@@ -163,8 +173,8 @@
 
     }
   </script>
-
-  <script>
+  <button onclick="addrows();">Press me</button>
+  <!-- <script>
     var i = 0;
     while (i < 2) {
       addrows();

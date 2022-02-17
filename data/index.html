@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/pico.min.css">
+  <link rel="stylesheet" href="css/mycss.css">
+  <script type="text/javascript" src="js/jquery-3.6.0.min.js"></script>
+
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+  <title>Testing</title>
+</head>
+
+<body>
+
+
+  <header class="container" style="padding-bottom: 20px;">
+    <hgroup>
+      <h1>Stepper</h1>
+      <h2>Current uptime: <span id="uptime">0 Seconds</span></h2>
+    </hgroup>
+  </header>
+
+
+
+
+  <form id="myform" name="myform" action="/submit" method="POST">
+    <div class="container" id="input_container">
+      <input class="myinput" type="number" id="atrums0" name="atrums0" placeholder="Ātrums">
+      <input class="myinput" type="number" id="distance0" name="distance0" placeholder="Attālums" value='%DISTANCE0%'>
+      <input type="radio" id="direction0" name="direction0" value="1" checked>
+      <label for="direction0">Up</label><br>
+      <input type="radio" id="direction0" name="direction0" value="0" %DIRECTION0%>
+      <label for="direction0">Down</label><br>
+
+      <input class="myinput" type="number" id="atrums1" name="atrums1" placeholder="Ātrums" value='%SPEED1%'>
+      <input class="myinput" type="number" id="distance1" name="distance1" placeholder="Attālums" value='%DISTANCE1%'>
+      <input type="radio" id="direction1" name="direction1" value="1" checked>
+      <label for="direction1">Up</label><br>
+      <input type="radio" id="direction1" name="direction1" value="0" %DIRECTION1%>
+      <label for="direction1">Down</label><br>
+<!-- 
+      <input class="myinput" type="number" id="atrums2" name="atrums2" placeholder="Ātrums" value='%SPEED2%'>
+      <input class="myinput" type="number" id="distance2" name="distance2" placeholder="Attālums" value='%DISTANCE2%'>
+    
+      <input type="radio" id="direction2" name="direction2" value="1" checked>
+      <label for="atrums2">Up</label><br>
+      <input type="radio" id="direction2" name="direction2" value="0" %DIRECTION2%>
+      <label for="atrums2">Down</label><br> -->
+
+
+
+
+
+      <button type="submit">
+        Submit
+      </button>
+
+    </div>
+  </form>
+
+  <!-- <button onclick="test();">async test</button> -->
+  <script>
+    function convertFormToJSON(form) {
+      var object = {};
+      form.forEach((value, key) => object[key] = value);
+      console.log(JSON.stringify(object['distance0']))
+      return JSON.stringify(object);
+    }
+
+    $(document).ready(function () {
+      $('#myform').submit(function (event) {
+
+
+        event.preventDefault();
+        let myform = document.getElementById('myform');
+        let fd = new FormData(myform);
+
+        $.ajax({
+          url: "/submit",
+          data: convertFormToJSON(fd),
+          type: 'POST',
+          
+          success: function (dataofconfirmation) {
+            alert('ok');
+          },
+
+          error: function(er){
+            alert('not ok');
+            console.log(convertFormToJSON(fd));
+          }
+
+        });
+        
+      });
+    });
+
+
+  </script>
+
+  <!-- <button onclick="addrows();">Press me</button> -->
+  <!-- <script>
+    function addrows() {
+      var speed = ''.concat('%',"SPEED",i,'%');
+      console.log(speed);
+      console.log("%SPEED0%");
+      let speed_placeholder = `%${speed}%`
+      let atrums = document.createElement("input");
+      let distance = document.createElement("input");
+      let up = document.createElement("input");
+      let up_label = document.createElement("label");
+      let down = document.createElement("input");
+      let down_label = document.createElement("label");
+      let container = document.getElementById("input_container");
+
+      atrums.className = "myinput";
+      atrums.type = "number";
+      atrums.id = "atrums" + i;
+      atrums.name = "atrums" + i;
+      atrums.placeholder = "Ātrums";
+      atrums.value = speed_placeholder;
+      console.log(speed_placeholder);
+      //atrums.value = '%SPEED0%';
+
+      distance.className = "myinput";
+      distance.type = "number";
+      distance.id = "distance" + i;
+      distance.name = "distance" + i;
+      distance.placeholder = "Attālums";
+      distance.value = "%DISTANCE" + i + "%";
+
+      container.append(atrums);
+      container.append(distance);
+
+      up.type = "radio";
+      up.id = "direction" + i;
+      up.name = "direction" + i;
+      up.value = '1';
+      up.checked = true;
+
+      down.type = "radio";
+      down.id = "direction" + i;
+      down.name = "direction" + i;
+      down.value = '0';
+
+
+      up_label.appendChild(up);
+      up_label.appendChild(document.createTextNode("Up"));
+
+      down_label.appendChild(down);
+      down_label.appendChild(document.createTextNode("Down"));
+
+
+      container.append(up_label);
+      container.append(down_label);
+
+    }
+  </script>
+
+  <script>
+    var i = 0;
+    while (i < 2) {
+      addrows();
+      i++;
+    }
+  </script> -->
+</body>
+
+</html>

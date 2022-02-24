@@ -1,18 +1,17 @@
 #include "internet.h"
 
-// const char *ssid = "KEKW 2.4";
-// const char *password = "Pepelsin32!";
+const char *ssid = "KEKW 2.4";
+const char *password = "Pepelsin32!";
 
 // const char *ssid = "NanoLab";
 // const char *password = "Mikro2015";
 
-const char *ssid = "Vladislavs";
-const char *password = "";
-
-uint8_t counter = 0;
+// const char *ssid = "Vladislavs";
+// const char *password = "";
 
 bool initialize_wifi()
 {
+    uint8_t counter = 0;
     delay(1000);
     Serial.print("\n\nConnecting to WiFi");
     WiFi.begin(ssid, password);
@@ -23,7 +22,7 @@ bool initialize_wifi()
         Serial.print(".");
         counter++;
 
-        if (counter >= 30)
+        if (counter >= 20)
         {
             return 0;
         }

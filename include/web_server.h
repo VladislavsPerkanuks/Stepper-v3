@@ -23,5 +23,8 @@ void initialize_server();
 void print_input();
 
 extern input inputs[15];
+extern bool submitted;
+extern bool finished;
+// extern String passed_time2;
 #endif // !WEB_SERVER_H
 

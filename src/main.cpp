@@ -20,8 +20,13 @@ uint8_t position = 0;
 int i = 0;
 unsigned long timeee = 0;
 unsigned long currentMillis;
- void my_loop();
+// bool finished;
+// input inputs[15];
+// bool submitted;
+uint32_t passed_time = 0;
+uint32_t total_passed_time = 0;
 
+int ledState2 = LOW;
 void setup()
 {
   Serial.begin(74880);
@@ -54,129 +59,40 @@ void setup()
   }
 
   initialize_server();
-  // my_loop();
-}
-
-// void my_loop()
-// {
-//   uint8_t i = 0;
-
-//   while (inputs[i].speed || inputs[0].speed == 0)
-//   {
-
-//     unsigned long currentMillis = millis();
-//     if (currentMillis - previousMillis >= inputs[i].interval)
-//     {
-//       timeee += currentMillis - previousMillis;
-//       if (timeee >= inputs[i].speed / inputs[i].distance)
-//       {
-//         i++;
-//         continue;
-//       }
-//       previousMillis = currentMillis;
-//       position += inputs[i].direction;
-//       uint8_t phase = position & 0x3;
-
-//       if (inputs[i].direction)
-//       {
-//         digitalWrite(STEPPER_LINE1, Q1[phase]);
-//         digitalWrite(STEPPER_LINE2, Q2[phase]);
-//         digitalWrite(STEPPER_LINE3, Q3[phase]);
-//         digitalWrite(STEPPER_LINE4, Q4[phase]);
-//       }
-//       else
-//       { // turn off all lines
-//         static const uint8_t stepper_off = LOW;
-//         digitalWrite(STEPPER_LINE1, stepper_off);
-//         digitalWrite(STEPPER_LINE2, stepper_off);
-//         digitalWrite(STEPPER_LINE3, stepper_off);
-//         digitalWrite(STEPPER_LINE4, stepper_off);
-//       }
-//     }
-//   }
-// }
-
-void do_something(input x)
-{
-  currentMillis = millis();
-  if (currentMillis - previousMillis >= inputs[i].interval)
-  {
-    timeee += currentMillis - previousMillis;
-    Serial.println(timeee);
-
-    if (timeee >=  (x.distance / x.speed)*1000000)
-    {
-      i++;
-    }
-
-    previousMillis = currentMillis;
-    position += x.direction;
-    uint8_t phase = position & 0x3;
-
-    if (x.direction)
-    {
-      digitalWrite(STEPPER_LINE1, Q1[phase]);
-      digitalWrite(STEPPER_LINE2, Q2[phase]);
-      digitalWrite(STEPPER_LINE3, Q3[phase]);
-      digitalWrite(STEPPER_LINE4, Q4[phase]);
-    }
-    else
-    { // turn off all lines
-      static const uint8_t stepper_off = LOW;
-      digitalWrite(STEPPER_LINE1, stepper_off);
-      digitalWrite(STEPPER_LINE2, stepper_off);
-      digitalWrite(STEPPER_LINE3, stepper_off);
-      digitalWrite(STEPPER_LINE4, stepper_off);
-    }
-  }
 }
 
 void loop()
 {
 
-  for (input x : inputs)
+  if (submitted)
   {
-    if (x.speed)
-      do_something(x);
+    int i = 0;
+    while (inputs[i].speed && !finished)
+    {
+      unsigned long currentMillis = millis();
+      // Serial.println(inputs[i].interval);
+      if (currentMillis - previousMillis >= inputs[i].interval)
+      {
+        if (previousMillis)
+          passed_time += (currentMillis - previousMillis);
+
+        previousMillis = currentMillis;
+
+        // Serial.println(String(passed_time));
+        // passed_time2 = String(passed_time / 1000) + " seconds";
+
+        ledState2 = ledState2 == HIGH ? LOW : HIGH;
+        digitalWrite(LEDPIN, ledState2);
+
+        if (passed_time >= (inputs[i].distance / inputs[i].speed))
+        {
+          i++;
+          total_passed_time += passed_time;
+          passed_time = 0;
+
+        }
+      }
+    }
+    finished = true;
   }
 }
-// {
-
-//   if (inputs[i].speed == 0)
-//   {
-//     delay(1000);
-//   }
-
-//   unsigned long currentMillis = millis();
-
-//   if (currentMillis - previousMillis >= inputs[i].interval)
-//   {
-
-//     timeee += currentMillis - previousMillis;
-
-//     if (timeee >= inputs[i].speed / inputs[i].distance)
-//     {
-//       i++;
-//     }
-
-//     previousMillis = currentMillis;
-//     position += inputs[i].direction;
-//     uint8_t phase = position & 0x3;
-
-//     if (inputs[i].direction)
-//     {
-//       digitalWrite(STEPPER_LINE1, Q1[phase]);
-//       digitalWrite(STEPPER_LINE2, Q2[phase]);
-//       digitalWrite(STEPPER_LINE3, Q3[phase]);
-//       digitalWrite(STEPPER_LINE4, Q4[phase]);
-//     }
-//     else
-//     { // turn off all lines
-//       static const uint8_t stepper_off = LOW;
-//       digitalWrite(STEPPER_LINE1, stepper_off);
-//       digitalWrite(STEPPER_LINE2, stepper_off);
-//       digitalWrite(STEPPER_LINE3, stepper_off);
-//       digitalWrite(STEPPER_LINE4, stepper_off);
-//     }
-//   }
-// }
